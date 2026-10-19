@@ -113,10 +113,11 @@ mv "$STAGED" "$LIVE" || die "Could not install the new Athena.app."
 # The stick's own Wi-Fi settings outrank the baseline in the archive.
 if [ -f "$TARGET/WifiConf.plist" ]; then
   say "kept:     your existing WifiConf.plist"
-elif [ -f "$WORK/x/WifiConf.plist" ]; then
-  mv "$WORK/x/WifiConf.plist" "$TARGET/WifiConf.plist"
-  chmod 644 "$TARGET/WifiConf.plist"
-  say "added:    WifiConf.plist (none was present)"
+else
+  # Releases carry no baseline - the repo is public and that would publish
+  # the shop's SSID. A stick without one needs the network set once.
+  say "note:     no WifiConf.plist on this stick - set the network in"
+  say "          Athena > Settings, or the MDM check cannot get online."
 fi
 
 say ""
