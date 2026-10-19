@@ -59,7 +59,10 @@ fi
 # --- what is the latest -------------------------------------------------
 say ""
 say "checking for the latest build..."
-JSON=$(curl -fsSL --max-time 30 "$MANIFEST") || die "Could not reach GitHub. Is this Mac online?"
+# The ?t= is not decoration: GitHub's releases/latest/download/ redirect is
+# CDN-cached and keeps serving the previous release for a while after a new
+# one is published, which would report "already up to date" when it is not.
+JSON=$(curl -fsSL --max-time 30 "$MANIFEST?t=$(date +%s)") || die "Could not reach GitHub. Is this Mac online?"
 
 field() { printf '%s' "$JSON" | sed -n "s/.*\"$1\"[[:space:]]*:[[:space:]]*\"\([^\"]*\)\".*/\1/p" | head -1; }
 VERSION=$(field version)
